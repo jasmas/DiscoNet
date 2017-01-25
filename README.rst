@@ -45,7 +45,7 @@ Examples:
     
     To use as a module in your own application::
     
-        from DiscoNet import DiscoveryScan
+        from DiscoNet.discoveryscan import DiscoveryScan
         
         d = DiscoveryScan(workbook, subnets, username, password, commands)
         d.start()
@@ -53,7 +53,7 @@ Examples:
     The start method will block until the scan is complete. Optionally, the start method
     can be non-blocking when supplied with an optional callback function::
     
-        from DiscoNet import DiscoveryScan
+        from DiscoNet.discoveryscan import DiscoveryScan
         
         def cb()
             #callback function
