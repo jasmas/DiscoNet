@@ -4,8 +4,22 @@ DiscoNet module
 This module scans specified subnets and IPs for SSH servers that can be accessed with the
 provided credentials and populates an xlsx workbook with the output.
 
-.. image:: https://raw.githubusercontent.com/jasmas/DiscoNet/master/doc/_static/DiscoNet.png
+.. image:: DiscoNet.png
    :alt: DiscoNet GUI
+
+Installation
+------------
+
+To install DiscoNet, install python on your system and run the following from the DiscoNet
+source tree::
+
+    $ python setup.py install
+
+DiscoNet makes use of Kivy for GUI components which is distributed with binary wheels for
+python versions 2.7 and 3.4. Stick to those versions to avoid having to build Kivy.
+
+Usage
+-----
 
 The GUI and command line application take several input parameters:
     * workbook: Path to output xlsx file
