@@ -191,7 +191,7 @@ Root:
             MyTextInput:
                 id: commands
                 multiline: True
-                hint_text: "show ver\\nshow run\\nshow 1ip int br"
+                hint_text: "show ver\\nshow run\\nshow ip int br"
         RowLayout:
             MyButton:
                 size_hint_x: 0.2
