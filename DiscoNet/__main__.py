@@ -4,7 +4,7 @@
 DiscoNet GUI Application
 """
 
-
+import sys, os, subprocess, ipaddress
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -16,10 +16,7 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.lang import Builder
-import os, sys, subprocess, ipaddress
 from discoveryscan import DiscoveryScan
-
-
 
 
 class ValidatingTextInput(TextInput):
@@ -234,6 +231,7 @@ Root:
 
 class DiscoNet(App):
     def build(self):
+        self.icon = 'disco.png'
         return root
 
 
@@ -242,7 +240,6 @@ Factory.register('SelectDialog', cls=SelectDialog)
 
 def run():
     DiscoNet().run()
-    Builder.sync()
 
 if __name__ == '__main__':
     run()
