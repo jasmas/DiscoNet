@@ -53,7 +53,7 @@ Examples:
         d.start()
         
     The start method will block until the scan is complete. Optionally, the start method
-    can be non-blocking when supplied with an optional callback function::
+    can be non-blocking when supplied with a callback function::
     
         from DiscoNet.discoveryscan import DiscoveryScan
         
