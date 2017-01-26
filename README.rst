@@ -10,7 +10,7 @@ provided credentials and populates an xlsx workbook with the output.
 Installation
 ------------
 
-Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases/latest>`_.
+Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases>`_.
 
 To install DiscoNet, install python on your system and run the following from the DiscoNet
 source tree::
