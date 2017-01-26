@@ -7,9 +7,10 @@ discoveryscan module
 
 import paramiko
 import threading
-from multiprocessing import Process, Lock, JoinableQueue, cpu_count
+from multiprocessing import Process, Lock, JoinableQueue, cpu_count, freeze_support
 from openpyxl import Workbook, load_workbook
-import ipaddress, time
+import sys, os, ipaddress, time
+from builtins import str
 from datetime import datetime
 
 
@@ -55,7 +56,7 @@ class DiscoveryScan:
         self.m = 0
 
         for net in subnets.split(','):
-            net = ipaddress.ip_network(net)
+            net = ipaddress.ip_network(str(net))
             if net.num_addresses > 1:
                 for host in net.hosts():
                     self.q.put(str(host))
@@ -197,7 +198,7 @@ def _main():
             print("Error: Could not open %s for writing" % argv[1])
         try:
             for net in argv[2].split(','):
-                net = ipaddress.ip_network(net)
+                net = ipaddress.ip_network(str(net))
         except:
             print(usage)
             print("Error: subnets must be a comma delimited list of networks and IP "
@@ -206,5 +207,42 @@ def _main():
         d = DiscoveryScan(argv[1], argv[2], argv[3], argv[4], argv[5])
         d.start()
 
+# freeze support
+# Module multiprocessing is organized differently in Python 3.4+
+try:
+    # Python 3.4+
+    if sys.platform.startswith('win'):
+        import multiprocessing.popen_spawn_win32 as forking
+    else:
+        import multiprocessing.popen_fork as forking
+except ImportError:
+    import multiprocessing.forking as forking
+
+if sys.platform.startswith('win'):
+    # First define a modified version of Popen.
+    class _Popen(forking.Popen):
+        def __init__(self, *args, **kw):
+            if hasattr(sys, 'frozen'):
+                # We have to set original _MEIPASS2 value from sys._MEIPASS
+                # to get --onefile mode working.
+                os.putenv('_MEIPASS2', sys._MEIPASS)
+            try:
+                super(_Popen, self).__init__(*args, **kw)
+            finally:
+                if hasattr(sys, 'frozen'):
+                    # On some platforms (e.g. AIX) 'os.unsetenv()' is not
+                    # available. In those cases we cannot delete the variable
+                    # but only set it to the empty string. The bootloader
+                    # can handle this case.
+                    if hasattr(os, 'unsetenv'):
+                        os.unsetenv('_MEIPASS2')
+                    else:
+                        os.putenv('_MEIPASS2', '')
+
+    # Second override 'Popen' class with our modified version.
+    forking.Popen = _Popen
+
+
 if __name__ == '__main__':
+    freeze_support()
     _main()

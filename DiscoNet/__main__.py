@@ -4,6 +4,50 @@
 DiscoNet GUI Application
 """
 
+
+import sys, os
+from multiprocessing import freeze_support
+from DiscoNet.discoveryscan import DiscoveryScan
+
+# freeze support
+# Module multiprocessing is organized differently in Python 3.4+
+try:
+    # Python 3.4+
+    if sys.platform.startswith('win'):
+        import multiprocessing.popen_spawn_win32 as forking
+    else:
+        import multiprocessing.popen_fork as forking
+except ImportError:
+    import multiprocessing.forking as forking
+
+if sys.platform.startswith('win'):
+    # First define a modified version of Popen.
+    class _Popen(forking.Popen):
+        def __init__(self, *args, **kw):
+            if hasattr(sys, 'frozen'):
+                # We have to set original _MEIPASS2 value from sys._MEIPASS
+                # to get --onefile mode working.
+                os.putenv('_MEIPASS2', sys._MEIPASS)
+            try:
+                super(_Popen, self).__init__(*args, **kw)
+            finally:
+                if hasattr(sys, 'frozen'):
+                    # On some platforms (e.g. AIX) 'os.unsetenv()' is not
+                    # available. In those cases we cannot delete the variable
+                    # but only set it to the empty string. The bootloader
+                    # can handle this case.
+                    if hasattr(os, 'unsetenv'):
+                        os.unsetenv('_MEIPASS2')
+                    else:
+                        os.putenv('_MEIPASS2', '')
+
+    # Second override 'Popen' class with our modified version.
+    forking.Popen = _Popen
+
+
+if __name__ == '__main__':
+    freeze_support()
+
 import sys, os, subprocess, ipaddress
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
@@ -16,7 +60,6 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.lang import Builder
-from discoveryscan import DiscoveryScan
 
 
 class ValidatingTextInput(TextInput):
@@ -229,9 +272,19 @@ Root:
 
 """)
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(os.path.dirname(__file__))
+
+    return os.path.join(base_path, relative_path)
+
 class DiscoNet(App):
     def build(self):
-        self.icon = 'disco.png'
+        self.icon = resource_path('disco.ico')
         return root
 
 
@@ -242,4 +295,5 @@ def run():
     DiscoNet().run()
 
 if __name__ == '__main__':
+    freeze_support()
     run()

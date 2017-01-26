@@ -10,7 +10,7 @@ provided credentials and populates an xlsx workbook with the output.
 Installation
 ------------
 
-A binary distribution is available for OS X `here <https://github.com/jasmas/DiscoNet/releases/latest>`_.
+Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases/latest>`_.
 
 To install DiscoNet, install python on your system and run the following from the DiscoNet
 source tree::
@@ -45,6 +45,11 @@ Examples:
         $ DiscoNet
         $ discoveryscan workbook subnets username password commands
     
+    Use double quotes and new line escape sequences to input a list of commands as a
+    single string from the command line, e.g.::
+    
+        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver\nshow run"
+
     To use as a module in your own application::
     
         from DiscoNet.discoveryscan import DiscoveryScan

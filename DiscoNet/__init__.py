@@ -27,6 +27,11 @@ Examples:
         $ DiscoNet
         $ discoveryscan workbook subnets username password commands
     
+    Use double quotes and new line escape sequences to input a list of commands as a
+    single string from the command line, e.g.::
+    
+        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver\nshow run"
+    
     To use as a module in your own application::
     
         from DiscoNet.discoveryscan import DiscoveryScan
@@ -52,6 +57,6 @@ __url__ = 'https://github.com/jasmas/DiscoNet'
 __author__ = 'Jason Masker'
 __copyright__ = 'Copyright © 2017 Jason Masker <masker@post.harvard.edu>'
 __license__ = 'MIT'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __maintainer__ = 'Jason Masker'
 __email__ = 'masker@post.harvard.edu'

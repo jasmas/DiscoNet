@@ -11,6 +11,7 @@ import sys
 import DiscoNet
 
 here = os.path.abspath(os.path.dirname(__file__))
+os.chdir(here)
 
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
@@ -22,10 +23,10 @@ def read(*filenames, **kwargs):
     return sep.join(buf)
 
 
-if sys.argv[1] == 'install' or 'develop':
+if len(sys.argv) > 1 and ('install' in sys.argv[1] or 'develop' in sys.argv[1]):
     
     
-    if len(sys.argv) < 3 or (sys.argv[2] != '-u' and sys.argv[2] != '--uninstall'):
+    if len(sys.argv) < 3 or ('-u' not in sys.argv[2] and '--uninstall' not in sys.argv[2]):
         
         os.environ['USE_OSX_FRAMEWORKS'] = '0'
         
@@ -51,7 +52,7 @@ setup(
                       'winshell>=0.6; sys_platform == "win32"',
                     ],
     package_data={
-        '': ['*.kv'],
+        '': ['*.kv', '*.ico'],
     },
     author=DiscoNet.__author__,
     author_email=DiscoNet.__email__,
