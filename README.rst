@@ -11,6 +11,8 @@ The process of scanning networks and collecting command output is built on a mul
 architecture, so DiscoNet can rapidly scan through management and loopback subnets,
 populating an xlsx workbook with the output.
 
+To use the module in your own projects, please reference the `API Documentation <https://disconet.readthedocs.io>`_.
+
 Installation
 ------------
 
