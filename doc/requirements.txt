@@ -1,2 +1,0 @@
-docutils>=0.3
-Sphinx>=1.5.2

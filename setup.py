@@ -1,17 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-from os.path import join as pjoin
+from os.path import abspath, dirname, join as pjoin
+from os import chdir, environ
 import pip
 import io
 import codecs
 import os
 import sys
-
 import DiscoNet
 
-here = os.path.abspath(os.path.dirname(__file__))
-os.chdir(here)
+
+environ['USE_OSX_FRAMEWORKS'] = '0'
+print(environ.get('READTHEDOCS', None))
+if environ.get('READTHEDOCS', None) == 'True':
+    # Temporarily grab known working Kivy for readthedocs.org from git
+    #future environ['KIVY_GL_BACKEND'] = 'mock'
+    environ['USE_OPENGL_MOCK'] = '1'
+    pip.main(['install', 'https://github.com/kivy/kivy/archive/2d5b365747284b029c8a2b3291ca0f4d580e7b86.zip'])
+
+here = abspath(dirname(__file__))
+chdir(here)
 
 def read(*filenames, **kwargs):
     encoding = kwargs.get('encoding', 'utf-8')
@@ -27,9 +36,6 @@ if len(sys.argv) > 1 and ('install' in sys.argv[1] or 'develop' in sys.argv[1]):
     
     
     if len(sys.argv) < 3 or ('-u' not in sys.argv[2] and '--uninstall' not in sys.argv[2]):
-        
-        os.environ['USE_OSX_FRAMEWORKS'] = '0'
-        
         with io.open('requirements.txt') as reqs:
             for req in reqs:
                 pip.main(['install', req])
