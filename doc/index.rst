@@ -10,7 +10,7 @@ Welcome to DiscoNet's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. image:: _static/DiscoNet.png
+.. image:: _static/screenshot.png
    :alt: DiscoNet GUI
 
 .. automodule:: DiscoNet

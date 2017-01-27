@@ -4,7 +4,7 @@ DiscoNet module
 DiscoNet scans specified subnets and IPs for SSH servers that can be accessed with the
 provided credentials and executes an arbitrary list of commands.
 
-.. image:: DiscoNet.png
+.. image:: screenshot.png
    :alt: DiscoNet GUI
 
 The process of scanning networks and collecting command output is built on a multiprocess
