@@ -1,11 +1,15 @@
 DiscoNet module
 ###############
 
-This module scans specified subnets and IPs for SSH servers that can be accessed with the
-provided credentials and populates an xlsx workbook with the output.
+DiscoNet scans specified subnets and IPs for SSH servers that can be accessed with the
+provided credentials and executes an arbitrary list of commands.
 
 .. image:: DiscoNet.png
    :alt: DiscoNet GUI
+
+The process of scanning networks and collecting command output is built on a multiprocess
+architecture, so DiscoNet can rapidly scan through management and loopback subnets,
+populating an xlsx workbook with the output.
 
 Installation
 ------------
