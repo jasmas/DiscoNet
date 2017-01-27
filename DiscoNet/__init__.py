@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-DiscoNet module
-
 DiscoNet scans specified subnets and IPs for SSH servers that can be accessed with the
 provided credentials and executes an arbitrary list of commands.
 
@@ -34,7 +32,7 @@ Examples:
     Use double quotes and new line escape sequences to input a list of commands as a
     single string from the command line, e.g.::
     
-        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver\nshow run"
+        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver\\nshow run"
     
     To use as a module in your own application::
     
@@ -42,7 +40,7 @@ Examples:
         
         d = DiscoveryScan(workbook, subnets, username, password, commands)
         d.start()
-        
+    
     The start method will block until the scan is complete. Optionally, the start method
     can be non-blocking when supplied with a callback function::
     
@@ -54,6 +52,7 @@ Examples:
         
         d = DiscoveryScan(workbook, subnets, username, password, commands)
         d.start(cb)
+
 """
 __name__ = 'DiscoNet'
 __description__ = 'A tool for automating network discovery.'

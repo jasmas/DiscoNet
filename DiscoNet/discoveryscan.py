@@ -209,6 +209,6 @@ def _main():
 
 
 if __name__ == '__main__':
-    from DiscoNet.freezesupport import freeze_support
+    from DiscoNet._freezesupport import freeze_support
     freeze_support()
     _main()
