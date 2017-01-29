@@ -24,7 +24,9 @@ source tree::
     $ python setup.py install
 
 DiscoNet makes use of Kivy for GUI components which is distributed with binary wheels for
-python versions 2.7 and 3.4. Stick to those versions to avoid having to build Kivy.
+python versions 2.7 and 3.4. Stick to those versions to avoid having to build Kivy. If you
+wish to use a different version of python, you will first need to install Kivy, by
+following the instructions for your platform `here <https://kivy.org/docs/installation/installation.html>`_, before installing DiscoNet.
 
 Usage
 -----
@@ -34,7 +36,7 @@ The GUI and command line application take several input parameters:
     * subnets: Comma delimited list of networks and IP addresses to scan
     * username: SSH username
     * password: SSH password
-    * commands: String listing commands to run, one per line
+    * commands: One per line in the GUI or passed as parameters from the command line
 
 Examples:
     To open the GUI application::
