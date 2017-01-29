@@ -12,7 +12,6 @@ import DiscoNet
 
 
 environ['USE_OSX_FRAMEWORKS'] = '0'
-print(environ.get('READTHEDOCS', None))
 if environ.get('READTHEDOCS', None) == 'True':
     # Temporarily grab known working Kivy for readthedocs.org from git
     #future environ['KIVY_GL_BACKEND'] = 'mock'
@@ -58,7 +57,7 @@ setup(
                       'winshell>=0.6; sys_platform == "win32"',
                     ],
     package_data={
-        '': ['*.kv', '*.ico'],
+        '': ['*.kv', '*.ico', '*.png', '*.icns'],
     },
     author=DiscoNet.__author__,
     author_email=DiscoNet.__email__,
@@ -68,7 +67,7 @@ setup(
     keywords='net network discovery excel xlsx scan scanner tool subnet ip',
     entry_points={
         'console_scripts': ['discoveryscan = DiscoNet.discoveryscan:_main',],
-        'gui_scripts': ['DiscoNet = DiscoNet.__main__:run'],
+        'gui_scripts': ['DiscoNet = DiscoNet.__main__:run',],
         },
 )
 

@@ -27,12 +27,11 @@ Examples:
     run using the following commands accordingly::
     
         $ DiscoNet
-        $ discoveryscan workbook subnets username password commands
+        $ discoveryscan workbook subnets username password commands ...
     
-    Use double quotes and new line escape sequences to input a list of commands as a
-    single string from the command line, e.g.::
+    Use double quotes for each command and include as many as required, e.g.::
     
-        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver\\nshow run"
+        $ discoveryscan out.xlsx 172.16.0.0/24 admin password "show ver" "show run"
     
     To use as a module in your own application::
     
@@ -41,8 +40,9 @@ Examples:
         d = DiscoveryScan(workbook, subnets, username, password, commands)
         d.start()
     
-    The start method will block until the scan is complete. Optionally, the start method
-    can be non-blocking when supplied with a callback function::
+    The commands parameter should be an array of command strings to run. The start method
+    will block until the scan is complete. Optionally, the start method can be
+    non-blocking when supplied with a callback function::
     
         from DiscoNet.discoveryscan import DiscoveryScan
         
@@ -60,6 +60,6 @@ __url__ = 'https://github.com/jasmas/DiscoNet'
 __author__ = 'Jason Masker'
 __copyright__ = 'Copyright © 2017 Jason Masker <masker@post.harvard.edu>'
 __license__ = 'MIT'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __maintainer__ = 'Jason Masker'
 __email__ = 'masker@post.harvard.edu'

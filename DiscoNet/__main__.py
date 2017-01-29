@@ -5,17 +5,18 @@ DiscoNet GUI Application
 """
 
 
-import sys, os
-from multiprocessing import freeze_support
 from DiscoNet.discoveryscan import DiscoveryScan
-
-
 if __name__ == '__main__':
     from DiscoNet._freezesupport import freeze_support
     freeze_support()
 
 
-import sys, os, subprocess, ipaddress
+import sys, os
+sys.stdout = sys.stderr = open(os.devnull, 'w')
+
+
+from ipaddress import ip_network
+from os.path import basename, dirname, join as pjoin
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
@@ -27,6 +28,7 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.lang import Builder
+from DiscoNet._platform_detect import Detect
 
 
 class ValidatingTextInput(TextInput):
@@ -52,20 +54,15 @@ class Root(FloatLayout):
     username = ObjectProperty(None)
     password = ObjectProperty(None)
     commands = ObjectProperty(None)
-    if sys.platform.startswith('win'):
-        import winshell
-        default_name = os.path.join(winshell.my_documents(), 'Discovery.xlsx')
-    else:
-        default_name = os.path.join(os.path.expanduser('~'), 'Documents',
-                                    'Discovery.xlsx')
+    default_name = pjoin(Detect.doc_path, 'Discovery.xlsx')
 
     def dismiss_popup(self):
         self._popup.dismiss()
 
     def show_select(self):
         content = SelectDialog(select=self.select, cancel=self.dismiss_popup,
-                               path=os.path.dirname(self.file_name.text),
-                               file=os.path.basename(self.file_name.text))
+                               path=dirname(self.file_name.text),
+                               file=basename(self.file_name.text))
         self._popup = Popup(title="Select Discovery File", content=content,
                             size_hint=(0.9, 0.9))
         self._popup.open()
@@ -73,7 +70,7 @@ class Root(FloatLayout):
     def select(self, path, filename):
         if not filename.endswith('.xlsx'):
             filename+='.xlsx'
-        self.file_name.text = os.path.join(path, filename)
+        self.file_name.text = pjoin(path, filename)
 
         self.dismiss_popup()
 
@@ -85,7 +82,7 @@ class Root(FloatLayout):
     def validate_networks(self, nets):
         try:
             for net in nets.split(','):
-                net = ipaddress.ip_network(net)
+                net = ip_network(net)
         except:
             content_cancel = Button(text='Dismiss', size_hint_y=None, height=40)
             content_label = Label(text="Networks must be a comma delimited list of "
@@ -101,19 +98,19 @@ class Root(FloatLayout):
 
     def finish_discovery(self):
         self.dismiss_popup()
-        if sys.platform.startswith('darwin'):
-            subprocess.call(('open', self.file_name.text))
-        elif os.name == 'nt':
-            os.startfile(self.file_name.text)
-        elif os.name == 'posix':
-            subprocess.call(('xdg-open', self.file_name.text))
+        Detect.open_method(self.file_name.text)
 
     def run_discovery(self):
         self._popup = Popup(title="Discovery", content=Label(text="Running..."),
                             size_hint=(0.7, 0.3), auto_dismiss=False)
         self._popup.open()
+        
+        commands = []
+        for command in self.commands.text.splitlines():
+            commands.append(command)
+        
         d = DiscoveryScan(self.file_name.text, self.networks.text, self.username.text,
-                          self.password.text, self.commands.text)
+                          self.password.text, commands)
         d.start(self.finish_discovery)
 
 
@@ -239,28 +236,20 @@ Root:
 
 """)
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(os.path.dirname(__file__))
-
-    return os.path.join(base_path, relative_path)
 
 class DiscoNet(App):
     def build(self):
-        self.icon = resource_path('disco.ico')
+        self.icon = Detect.icon #resource_path('disco-1024.png')
         return root
 
 
 Factory.register('Root', cls=Root)
 Factory.register('SelectDialog', cls=SelectDialog)
 
+
 def run():
     DiscoNet().run()
 
+
 if __name__ == '__main__':
-    freeze_support()
     run()

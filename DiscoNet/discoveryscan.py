@@ -5,13 +5,14 @@ discoveryscan module
 """
 
 
-import paramiko
-import threading
-from multiprocessing import Process, Lock, JoinableQueue, cpu_count, freeze_support
-from openpyxl import Workbook, load_workbook
-import sys, os, ipaddress, time
 from builtins import str
 from datetime import datetime
+from ipaddress import ip_network
+from threading import Thread
+from multiprocessing import Process, Lock, JoinableQueue, cpu_count, freeze_support
+import paramiko
+from openpyxl import Workbook, load_workbook
+from DiscoNet._freezesupport import freeze_support
 
 
 class _DiscoveryWorkbook:
@@ -56,7 +57,7 @@ class DiscoveryScan:
         self.m = 0
 
         for net in subnets.split(','):
-            net = ipaddress.ip_network(str(net))
+            net = ip_network(str(net))
             if net.num_addresses > 1:
                 for host in net.hosts():
                     self.q.put(str(host))
@@ -75,7 +76,7 @@ class DiscoveryScan:
         ws.append(['Password:', self.p])
         ws.append(['Commands:'])
         x = 1
-        for line in self.c.splitlines():
+        for line in self.c:
             ws.append([x, line.rstrip()])
             x += 1
         self.wb = _DiscoveryWorkbook(workbook)
@@ -107,35 +108,26 @@ class DiscoveryScan:
                 self.q.task_done()
                 continue
 
-
             x = 1
-            for command in self.c.splitlines():
-                try:
-                    if asa:
-                        command = "term pager 0\n" + command + "\nexit\n"
-                    else:
-                        command = command + "\n"
-                    handle.connect(host, username=self.u, password=self.p,
-                                   look_for_keys=False, timeout=2)
-                    stdin, stdout, stderr = handle.exec_command(command)
-                except:
-                    continue
+            for command in self.c:
+                if asa:
+                    command = "term pager 0\n" + command + "\nexit\n"
+                else:
+                    command = command + "\n"
+                handle.connect(host, username=self.u, password=self.p,
+                               look_for_keys=False, timeout=2)
+                stdin, stdout, stderr = handle.exec_command(command)
                 ws = []
                 ws.append([command.rstrip()])
-                try:
-                    stdout.channel.recv_exit_status()
-                    for line in stdout:
-                        ws.append([line.rstrip()])
-                except:
-                    continue
+                stdout.channel.recv_exit_status()
+                for line in stdout:
+                    ws.append([line.rstrip()])
                 self.wb.new_sheet("%s-%s" % (host, str(x)), ws)
-                try:
-                    stdin.close()
-                    stdout.close()
-                    stderr.close()
-                    handle.close()
-                except:
-                    x += 1
+                stdin.close()
+                stdout.close()
+                stderr.close()
+                handle.close()
+                x += 1
             self.q.task_done()
 
     def _start(self, cb):
@@ -171,7 +163,7 @@ class DiscoveryScan:
         :rtype: None
         """
         if cb:
-            thread = threading.Thread(target=self._start, args=(cb,))#, daemon=True)
+            thread = Thread(target=self._start, args=(cb,))#, daemon=True)
             thread.start()
         else:
             self._start(cb)
@@ -179,15 +171,15 @@ class DiscoveryScan:
 def _main():
     from sys import argv, exit
 
-    usage = ("usage: %s workbook subnets username password commands\n"
+    usage = ("usage: %s workbook subnets username password command ...\n"
              "\n"
              "	workbook	Path to output xlsx file\n"
              "	subnets		Comma delimited list of networks and IP addresses to scan\n"
              "	username	SSH username\n"
              "	password	SSH password\n"
-             "	commands	String listing commands to run, one per line\n" % argv[0])
+             "	command		Quoted commands to run, as many as required\n" % argv[0])
 
-    if len(argv) != 6:
+    if not len(argv) >= 6:
         print(usage)
     else:
         try:
@@ -198,17 +190,21 @@ def _main():
             print("Error: Could not open %s for writing" % argv[1])
         try:
             for net in argv[2].split(','):
-                net = ipaddress.ip_network(str(net))
+                net = ip_network(str(net))
         except:
             print(usage)
             print("Error: subnets must be a comma delimited list of networks and IP "
                   "addresses, e.g.,\n'10.0.0.0/16,192.168.0.0/255.255.255.0,10.10.10.10'")
             exit(1)
-        d = DiscoveryScan(argv[1], argv[2], argv[3], argv[4], argv[5])
+        
+        commands = []
+        for i in range(5, len(argv)):
+            commands.append(argv[i])
+
+        d = DiscoveryScan(argv[1], argv[2], argv[3], argv[4], commands)
         d.start()
 
 
 if __name__ == '__main__':
-    from DiscoNet._freezesupport import freeze_support
     freeze_support()
     _main()
