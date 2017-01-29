@@ -6,12 +6,12 @@ from os import chdir, environ
 import io
 import codecs
 from setuptools import setup, find_packages
-import pip
 import DiscoNet
 
 
 environ['USE_OSX_FRAMEWORKS'] = '0'
 if environ.get('READTHEDOCS', None) == 'True':
+    import pip
     pip.main(['install', 'https://github.com/kivy/kivy/archive/master.zip'])
 
 here = abspath(dirname(__file__))
@@ -25,13 +25,6 @@ def read(*filenames, **kwargs):
         with io.open(filename, encoding=encoding) as f:
             buf.append(f.read())
     return sep.join(buf)
-
-if len(sys.argv) > 1 and ('install' in sys.argv[1] or 'develop' in sys.argv[1]):
-    if len(sys.argv) < 3 or ('-u' not in sys.argv[2] and '--uninstall' not in sys.argv[2]):
-        with io.open('requirements.txt') as reqs:
-            for req in reqs:
-                pip.main(['install', req])
-
 
 long_description = read('README.rst')
 

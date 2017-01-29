@@ -18,15 +18,15 @@ Installation
 
 Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases>`_.
 
-To install DiscoNet, install python on your system and run the following from the DiscoNet
-source tree::
+To install DiscoNet into your python environment, follow the instructions `here <https://kivy.org/docs/installation/installation.html>`_ to get Kivy
+and dependencies installed on your platform. Once Kivy in installed, make sure you have
+current versions of pip and setuptools, then install DiscoNet using pip::
 
-    $ python setup.py install
+    $ pip install --upgrade setuptools pip
+    $ pip install DiscoNet
 
-DiscoNet makes use of Kivy for GUI components which is distributed with binary wheels for
-python versions 2.7 and 3.4. Stick to those versions to avoid having to build Kivy. If you
-wish to use a different version of python, you will first need to install Kivy, by
-following the instructions for your platform `here <https://kivy.org/docs/installation/installation.html>`_, before installing DiscoNet.
+Kivy distributes binary wheels for python versions 2.7 and 3.4 on some platforms. Stick to
+those versions to avoid having to build Kivy with Cython.
 
 Usage
 -----
