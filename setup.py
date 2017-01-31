@@ -26,34 +26,37 @@ def read(*filenames, **kwargs):
             buf.append(f.read())
     return sep.join(buf)
 
-long_description = read('README.rst')
-
 setup(
     name=DiscoNet.__name__,
     version=DiscoNet.__version__,
     url=DiscoNet.__url__,
     packages=find_packages(),
     install_requires=['docutils>=0.3',
-                      'kivy.deps.sdl2>=0.1.12; sys_platform == "win32"',
-                      'kivy.deps.glew>=0.1.4; sys_platform == "win32"',
-                      'kivy>=1.9.0',
+                      'future>=0.16.0',
                       'openpyxl>=2.4.1',
                       'paramiko>=2.1.1',
-                      'pypiwin32>=219; sys_platform == "win32"',
-                      'winshell>=0.6; sys_platform == "win32"',
-                    ],
+                      ],
+    extras_require={
+        ':sys_platform == "win32"': [
+            'pypiwin32>=219',
+            'winshell>=0.6',],
+        'GUI': [
+            'kivy.deps.sdl2>=0.1.12; sys_platform == "win32"',
+            'kivy.deps.glew>=0.1.4; sys_platform == "win32"',
+            'Kivy>=1.9.0',],
+        },
     package_data={
         '': ['*.kv', '*.ico', '*.png', '*.icns'],
     },
     author=DiscoNet.__author__,
     author_email=DiscoNet.__email__,
     description=DiscoNet.__description__,
-    long_description=long_description,
+    long_description=DiscoNet.__doc__,
     license=DiscoNet.__license__,
     keywords='net network discovery excel xlsx scan scanner tool subnet ip',
     entry_points={
         'console_scripts': ['discoveryscan = DiscoNet.discoveryscan:_main',],
-        'gui_scripts': ['DiscoNet = DiscoNet.__main__:run',],
+        'gui_scripts': ['DiscoNet = DiscoNet.__main__:run [GUI]',],
         },
 )
 

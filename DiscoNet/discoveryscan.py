@@ -40,7 +40,7 @@ class DiscoveryScan:
     :param str subnets: comma delimited list of networks and IP addresses to scan
     :param str username: SSH username
     :param str password: SSH password
-    :param str commands: string listing commands to run, one per line
+    :param list(str) commands: string listing commands to run, one per line
     :return: an initialized DiscoveryScan object
     :rtype: DiscoveryScan
     
@@ -158,7 +158,7 @@ class DiscoveryScan:
         be specified to make this process non-blocking and the callback will be called
         when complete.
         
-        :param function cb: callback method. Defaults to None.
+        :param function or None cb: callback method. Defaults to None.
         :return: nothing
         :rtype: None
         """
@@ -174,7 +174,7 @@ def _main():
     usage = ("usage: %s workbook subnets username password command ...\n"
              "\n"
              "	workbook	Path to output xlsx file\n"
-             "	subnets		Comma delimited list of networks and IP addresses to scan\n"
+             "	subnets		Comma delimited list of networks and hosts to scan\n"
              "	username	SSH username\n"
              "	password	SSH password\n"
              "	command		Quoted commands to run, as many as required\n" % argv[0])
