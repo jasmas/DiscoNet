@@ -22,7 +22,7 @@ You can also opt to install the DiscoNet GUI which uses to Kivy library. To inst
 you will first need to follow the `Kivy Installation Instructions <https://kivy.readthedocs.io/en/latest/installation/installation.html>`_ for your platform.
 Then install DiscoNet with the GUI marker::
 
-    $ pip install DiscoNet[GUI]
+    $ pip install DiscoNet[kivy]
 
 Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases>`_.
 
@@ -65,7 +65,7 @@ Examples:
     
         from DiscoNet.discoveryscan import DiscoveryScan
         
-        d = DiscoveryScan(workbook, subnets, username, password, (commands, ...))
+        d = DiscoveryScan(workbook, subnets, username, password, [commands, ...])
         d.start()
         
     The commands parameter should be a list of command strings. The start method will
@@ -78,7 +78,7 @@ Examples:
             #callback function
             return
         
-        d = DiscoveryScan(workbook, subnets, username, password, (commands, ...))
+        d = DiscoveryScan(workbook, subnets, username, password, [commands, ...])
         d.start(cb)
 
 """
@@ -88,6 +88,6 @@ __url__ = 'https://github.com/jasmas/DiscoNet'
 __author__ = 'Jason Masker'
 __copyright__ = 'Copyright © 2017 Jason Masker <masker@post.harvard.edu>'
 __license__ = 'MIT'
-__version__ = '0.2.0'
+__version__ = '0.2.7'
 __maintainer__ = 'Jason Masker'
 __email__ = 'masker@post.harvard.edu'

@@ -5,7 +5,7 @@ DiscoNet scans specified subnets and IPs for SSH servers that can be accessed wi
 provided credentials and executes an arbitrary list of commands.
 
 .. image:: screenshot.png
-   :alt: DiscoNet GUI
+   :alt: DiscoNet Screenshot
 
 The process of scanning networks and collecting command output is built on a multiprocess
 architecture, so DiscoNet can rapidly scan through management and loopback subnets,
@@ -23,7 +23,7 @@ You can also opt to install the DiscoNet GUI which uses to Kivy library. To inst
 you will first need to follow the `Kivy Installation Instructions <https://kivy.readthedocs.io/en/latest/installation/installation.html>`_ for your platform.
 Then install DiscoNet with the GUI marker::
 
-    $ pip install DiscoNet[GUI]
+    $ pip install DiscoNet[kivy]
 
 Binary distributions for OS X and Windows are available `here <https://github.com/jasmas/DiscoNet/releases>`_.
 
@@ -66,7 +66,7 @@ Examples:
     
         from DiscoNet.discoveryscan import DiscoveryScan
         
-        d = DiscoveryScan(workbook, subnets, username, password, (commands, ...))
+        d = DiscoveryScan(workbook, subnets, username, password, [commands, ...])
         d.start()
         
     The commands parameter should be a list of command strings. The start method will
@@ -79,5 +79,5 @@ Examples:
             #callback function
             return
         
-        d = DiscoveryScan(workbook, subnets, username, password, (commands, ...))
+        d = DiscoveryScan(workbook, subnets, username, password, [commands, ...])
         d.start(cb)

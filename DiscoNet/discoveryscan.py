@@ -6,6 +6,7 @@ discoveryscan module
 
 
 from builtins import str
+from os.path import basename
 from datetime import datetime
 from ipaddress import ip_network
 from threading import Thread
@@ -171,13 +172,14 @@ class DiscoveryScan:
 def _main():
     from sys import argv, exit
 
-    usage = ("usage: %s workbook subnets username password command ...\n"
+    usage = ("usage: %s workbook subnets username password commands ...\n"
              "\n"
              "	workbook	Path to output xlsx file\n"
              "	subnets		Comma delimited list of networks and hosts to scan\n"
              "	username	SSH username\n"
              "	password	SSH password\n"
-             "	command		Quoted commands to run, as many as required\n" % argv[0])
+             "	commands	Quoted commands to run, as many as required\n"
+             % basename(argv[0]))
 
     if not len(argv) >= 6:
         print(usage)
