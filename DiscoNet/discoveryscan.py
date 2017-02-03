@@ -13,6 +13,7 @@ from threading import Thread
 from multiprocessing import Process, Lock, JoinableQueue, cpu_count, freeze_support
 import paramiko
 from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Font
 from DiscoNet._freezesupport import freeze_support
 
 
@@ -25,10 +26,28 @@ class _DiscoveryWorkbook:
 
     def new_sheet(self, sname, rows):
         self.l.acquire()
-        w = load_workbook(self.fname) if self.init else Workbook(write_only = True)
+        if self.init:
+            w = load_workbook(self.fname)
+        else:
+            w = Workbook()
+            w.remove_sheet(w.worksheets[0])    
         ws = w.create_sheet(sname)
         for row in rows:
+            row[0] = '=+"' + str(row[0]).replace('"','""') + '"'
             ws.append(row)
+        
+        #simple formatting
+        if self.init:
+            ws.column_dimensions['A'].width = 89
+            for i in range(1, ws.max_row+1):
+                ws.cell(row=i, column=1).font = Font(name='Lucida Console')
+        else:
+            ws.column_dimensions['A'].width = 12
+            ws.column_dimensions['B'].width = 30
+            for i in range(1, ws.max_row+1):
+                for j in range(1, ws.max_column+1):
+                    ws.cell(row=i, column=j).font = Font(name='Lucida Console')
+        
         w.save(self.fname)
         self.init = True
         self.l.release()
