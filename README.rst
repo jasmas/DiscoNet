@@ -19,7 +19,7 @@ Install DiscoNet using the latest version of setuptools and pip::
     $ pip install --upgrade setuptools pip
     $ pip install DiscoNet
 
-You can also opt to install the DiscoNet GUI which uses to Kivy library. To install it,
+You can also opt to install the DiscoNet GUI which uses the Kivy library. To install it,
 you will first need to follow the `Kivy Installation Instructions <https://kivy.readthedocs.io/en/latest/installation/installation.html>`_ for your platform.
 Then install DiscoNet with the GUI marker::
 
